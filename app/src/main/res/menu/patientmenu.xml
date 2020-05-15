@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_patient_prescription"
+        android:title="Prescription"/>
+
+    <item
+        android:id="@+id/nav_patient_profile"
+        android:title="Profile"/>
+    <item
+        android:id="@+id/nav_patient_appointments"
+        android:title="Appointments"/>
+    <item
+        android:id="@+id/nav_patient_requests"
+        android:title="Requests"/>
+
+    <item
+        android:id="@+id/nav_patient_pending"
+        android:title="Pending"/>
+
+    <item
+        android:id="@+id/nav_patient_logout"
+        android:title="Sign Out"/>
+</menu>
