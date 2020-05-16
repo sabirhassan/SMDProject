@@ -100,8 +100,7 @@ class PatientRequests : Fragment() {
                         Picasso.get().load(doc.ProfilePic).into(holder.profilepic)
                         holder.itemView.setOnClickListener() {
 
-                            val intent =
-                                Intent(holder.itemView.context, BookAppointment::class.java)
+                            val intent = Intent(holder.itemView.context, BookAppointment::class.java)
                             intent.putExtra("Doctor", doc)
                             holder.itemView.context.startActivity(intent)
                         }

@@ -7,7 +7,7 @@ class Doctor: Serializable
     var Name:String?=null
     var Address:String?=null
     var Bio:String?=null
-    var Experience:Int?=null
+    var Experience:String?=null
     var Fees:Int?=null
     var Likes:Int?=null
     var Phone:String?=null
@@ -26,7 +26,7 @@ class Doctor: Serializable
         Name: String?,
         Address: String?,
         Bio: String?,
-        Experience: Int?,
+        Experience: String?,
         Fees: Int?,
         Likes: Int?,
         Phone: String?,
