@@ -63,6 +63,7 @@ class BookAppointment : AppCompatActivity() {
             }
             val Date = tvdate.text.toString()
             val DoctorID = d1.Email
+            val DoctorName = d1.Name
             val PatientID = CurrentData.patientUser?.Email
             val Status = "Pending"
 
@@ -71,7 +72,8 @@ class BookAppointment : AppCompatActivity() {
                 "Date" to Date,
                 "DoctorID" to DoctorID,
                 "PatientID" to PatientID,
-                "Status" to Status
+                "Status" to Status,
+                "DoctorName" to DoctorName
             )
             db.collection("Requests").add(data2)
             Toast.makeText(applicationContext,"Request Sent!",Toast.LENGTH_SHORT).show()
