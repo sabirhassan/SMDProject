@@ -21,15 +21,15 @@
         android:id="@+id/doctorname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text="Patient"
         android:textColor="#FFFFFF"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/doctormail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is our navigation drawer"
-        android:textColor="#FFFFFF"/>
+        android:text="welcome to drawer"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

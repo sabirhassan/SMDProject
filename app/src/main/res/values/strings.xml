@@ -29,4 +29,25 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="patient_notification_channel_id" translatable="false">patient_request_accepted_channel</string>
+    <string name="patient_notification_channel_name" translatable="true">Patient Request Accepted</string>
+
+    <string name="patient_notification_title">Request Approval</string>
+    <string name="patient_notification_text">Doctor has approved your request!!</string>
+
+    <string name="doctor_notification_channel_id" translatable="false">patient_request_received_channel</string>
+    <string name="doctor_notification_channel_name" translatable="true">Patient Request Received</string>
+
+    <string name="doctor_notification_title">Request Approval</string>
+    <string name="doctor_notification_text">Doctor has approved your request!!</string>
+
+    <string name="doctor_accept">ACCEPT</string>
+    <string name="doctor_reject">REJECT</string>
+
+    <string name="patient_notification_channel_description">Appointment Request Reminder</string>
+
+    <string name="fcm_message">FCM Message</string>
+    <string name="message_subscribe_failed">Failed to subscribe to topic</string>
+    <string name="message_subscribed">Subscribed to topic</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.example.smdproject
 
+import android.app.NotificationManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,11 +8,14 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.smdproject.doctor.DoctorHome
 import com.example.smdproject.model.CurrentData
 import com.example.smdproject.model.Doctor
 import com.example.smdproject.model.User
 import com.example.smdproject.patient.PatientHome
+import com.example.smdproject.util.sendNotificationDoctor
+import com.example.smdproject.util.sendNotificationPatient
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,13 +28,12 @@ class MainActivity : AppCompatActivity() {
     val db = Firebase.firestore
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        patient=findViewById(R.id.patient_reg)
-        doctor=findViewById(R.id.doctor_reg)
+        patient = findViewById(R.id.patient_reg)
+        doctor = findViewById(R.id.doctor_reg)
         loginbtn = findViewById(R.id.loginbtn)
 
         loginbtn.setOnClickListener() {
@@ -53,19 +56,20 @@ class MainActivity : AppCompatActivity() {
                 .whereEqualTo("Password", pass).limit(1)
                 .get()
                 .addOnSuccessListener { documents ->
-                    if(documents.isEmpty)
-                    {
+                    if (documents.isEmpty) {
                         db.collection("Users")
                             .whereEqualTo("Email", mail)
                             .whereEqualTo("Password", pass).limit(1)
                             .get()
                             .addOnSuccessListener { documents ->
                                 if (documents.isEmpty) {
-                                    Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT)
+                                        .show()
                                 } else {
                                     for (document in documents) {
                                         Log.d("TAG", "${document.id} => ${document.data}")
-                                        CurrentData.patientUser = User(document.data["Name"].toString(),
+                                        CurrentData.patientUser = User(
+                                            document.data["Name"].toString(),
                                             document.data["Age"].toString(),
                                             document.data["BloodGroup"].toString(),
                                             document.data["Disability"].toString(),
@@ -75,7 +79,10 @@ class MainActivity : AppCompatActivity() {
                                             document.data["Password"].toString(),
                                             document.data["Phone"].toString(),
                                             document.data["Weight"].toString()
-                                            )
+                                        )
+
+                                        makeNotificaitonPatient()
+
                                         val homeIntent = Intent(this, PatientHome::class.java)
                                         homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(homeIntent)
@@ -88,12 +95,11 @@ class MainActivity : AppCompatActivity() {
                                 Log.w("TAG", "Error getting documents: ", exception)
                             }
 
-                    }
-                    else
-                    {
+                    } else {
                         for (document in documents) {
                             Log.d("TAG", "${document.id} => ${document.data}")
-                            CurrentData.doctorUser = Doctor(document.data["Name"].toString(),
+                            CurrentData.doctorUser = Doctor(
+                                document.data["Name"].toString(),
                                 document.data["Address"].toString(),
                                 document.data["Bio"].toString(),
                                 document.data["Experience"].toString(),
@@ -107,6 +113,7 @@ class MainActivity : AppCompatActivity() {
                                 document.data["Email"].toString()
                             )
 
+                            makeNotificaitonDoctor()
 
                             val homeIntent = Intent(this, DoctorHome::class.java)
                             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -123,16 +130,70 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-        patient.setOnClickListener{
+        patient.setOnClickListener {
             intent = Intent(this, RegisterPatient::class.java)
             startActivity(intent)
         }
 
 
-        doctor.setOnClickListener{
+        doctor.setOnClickListener {
             intent = Intent(this, RegisterDoctor::class.java)
             startActivity(intent)
         }
 
+    }
+
+    fun makeNotificaitonPatient() {
+        db.collection("Requests")
+            .whereEqualTo("PatientID", CurrentData.patientUser?.Email)
+            .whereEqualTo("Status", "Approved")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                } else {
+                    for (document in documents) {
+                        Log.d("TAG", "${document.id} => ${document.data}")
+
+                        val notificationManager = ContextCompat.getSystemService(
+                            this,
+                            NotificationManager::class.java
+                        ) as NotificationManager
+                        notificationManager.sendNotificationPatient(document.data["DoctorName"].toString()+"has accepted your request.", this)
+
+                        val homeIntent = Intent(this, PatientHome::class.java)
+                        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeIntent)
+                        finish()
+                    }
+                }
+            }
+    }
+
+    fun makeNotificaitonDoctor() {
+        db.collection("Requests")
+            .whereEqualTo("PatientID", CurrentData.patientUser?.Email)
+            .whereEqualTo("Status", "Pending")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                } else {
+                    for (document in documents) {
+                        Log.d("TAG", "${document.id} => ${document.data}")
+
+                        val notificationManager = ContextCompat.getSystemService(
+                            this,
+                            NotificationManager::class.java
+                        ) as NotificationManager
+                        notificationManager.sendNotificationDoctor(User(Name= document.data["PatientID"].toString(),Email = document.data["PatientID"].toString()),document.data["DoctorName"].toString()+"has accepted your request.", this)
+
+                        val homeIntent = Intent(this, PatientHome::class.java)
+                        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeIntent)
+                        finish()
+                    }
+                }
+            }
     }
 }
