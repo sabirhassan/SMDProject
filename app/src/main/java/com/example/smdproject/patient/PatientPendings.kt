@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smdproject.R
+import com.example.smdproject.model.CurrentData
 import com.example.smdproject.model.Doctor
 import com.example.smdproject.model.Request
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
@@ -64,7 +65,9 @@ class PatientPendings : Fragment() {
             mFirestoreList = view.findViewById(R.id.RecyclerPatientPendingList)
             mFirestoreList.layoutManager = LinearLayoutManager(view.context)
             val rootRef = FirebaseFirestore.getInstance()
-            val query: Query = rootRef.collection("Requests").whereEqualTo("Status", "Pending")
+            val query: Query = rootRef.collection("Requests").whereEqualTo("PatientID",
+                CurrentData.patientUser?.Email
+            ).whereEqualTo("Status", "Pending")
             val options =
                 FirestoreRecyclerOptions.Builder<Request>().setQuery(query, Request::class.java)
                     .build()
